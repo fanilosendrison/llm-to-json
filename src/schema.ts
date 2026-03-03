@@ -1,3 +1,3 @@
-import type { SchemaObject } from 'ajv';
+import type { SchemaObject } from "ajv";
 
 export type JSONSchema = SchemaObject;
