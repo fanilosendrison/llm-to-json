@@ -1,5 +1,5 @@
 {
-  "name": "llm-to-json",
+  "name": "@yada-one/llm-to-json",
   "version": "0.1.0",
   "description": "Standalone TypeScript package that transforms free-form LLM agent text into typed JSON via structured extraction",
   "type": "module",
