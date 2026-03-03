@@ -1,0 +1,24 @@
+{
+  "name": "llm-to-json",
+  "version": "0.1.0",
+  "description": "Standalone TypeScript package that transforms free-form LLM agent text into typed JSON via structured extraction",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "biome check src/",
+    "lint:fix": "biome check --write src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.9.0",
+    "vitest": "^3.0.0",
+    "@biomejs/biome": "^1.9.0",
+    "fast-check": "^3.0.0"
+  }
+}
