@@ -139,8 +139,11 @@ export class StructuredExtractor {
 					);
 				}
 			} finally {
-				// Cleanup dynamic schemas to prevent memory leaks
-				// Same object reference as resolvedSchema from step 5
+				// Cleanup dynamic schemas to prevent memory leaks.
+				// We rely on Ajv v8 behavior: removeSchema(object) deletes via Map identity
+				// lookup on the exact schema reference (not by $id or serialization).
+				// Same object reference as resolvedSchema from step 5. Covered by tv-schema-05.
+				// See: ajv/lib/core.ts — Ajv.removeSchema() → this.schemas Map.delete(schema)
 				if (isDynamic) {
 					this.ajv.removeSchema(resolvedSchema);
 				}
