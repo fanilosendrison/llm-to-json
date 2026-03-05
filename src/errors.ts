@@ -7,7 +7,7 @@ export class ExtractionFatalError extends Error {
 	type: ExtractionErrorType;
 	rawOutput: string;
 	contractId: string;
-	details?: string;
+	details?: string | undefined;
 
 	constructor(
 		type: ExtractionErrorType,
