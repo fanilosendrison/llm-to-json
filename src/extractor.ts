@@ -44,6 +44,8 @@ export class StructuredExtractor {
 		contract: ExtractionContract<T>,
 		variables: Record<string, string>,
 	): Promise<T> {
+		const extractStart = performance.now();
+
 		// Step 0: Log extract_start — before any validation
 		console.error(
 			JSON.stringify({
@@ -150,24 +152,28 @@ export class StructuredExtractor {
 			}
 
 			// Step 10: Log success + return
+			const durationMs = Math.round(performance.now() - extractStart);
 			console.error(
 				JSON.stringify({
 					event: "extract_end",
 					contractId: contract.id,
 					sourceAgent: contract.sourceAgent,
 					success: true,
+					durationMs,
 					timestamp: new Date().toISOString(),
 				}),
 			);
 			return result;
 		} catch (error) {
 			// Logging-only catch: observe, log, re-throw unchanged
+			const durationMs = Math.round(performance.now() - extractStart);
 			console.error(
 				JSON.stringify({
 					event: "extract_end",
 					contractId: contract.id,
 					sourceAgent: contract.sourceAgent,
 					success: false,
+					durationMs,
 					errorType: deriveErrorType(error),
 					timestamp: new Date().toISOString(),
 				}),
