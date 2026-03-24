@@ -160,6 +160,7 @@ export class StructuredExtractor {
 					sourceAgent: contract.sourceAgent,
 					success: true,
 					durationMs,
+					result,
 					timestamp: new Date().toISOString(),
 				}),
 			);
