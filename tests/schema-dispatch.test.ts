@@ -65,7 +65,7 @@ describe('Schema dispatch (real Ajv)', () => {
       parse: (raw: unknown) => raw as { value: string },
     };
 
-    const result = await extractor.extract('valid', contract, {
+    const { result } = await extractor.extract('valid', contract, {
       mode: 'string',
     });
 
@@ -82,7 +82,7 @@ describe('Schema dispatch (real Ajv)', () => {
       parse: (raw: unknown) => raw as { value: number },
     };
 
-    const result = await extractor.extract('valid', contract, {
+    const { result } = await extractor.extract('valid', contract, {
       mode: 'integer',
     });
 

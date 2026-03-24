@@ -26,11 +26,11 @@ describe('Edge cases & idempotence', () => {
     llmClient = mockLLMClient('{"name":"A","age":1}');
     extractor = new StructuredExtractor(llmClient);
 
-    const result1 = await extractor.extract('valid', simpleContract, {});
-    const result2 = await extractor.extract('valid', simpleContract, {});
+    const r1 = await extractor.extract('valid', simpleContract, {});
+    const r2 = await extractor.extract('valid', simpleContract, {});
 
-    expect(result1).toEqual({ name: 'A', age: 1 });
-    expect(result2).toEqual({ name: 'A', age: 1 });
+    expect(r1.result).toEqual({ name: 'A', age: 1 });
+    expect(r2.result).toEqual({ name: 'A', age: 1 });
   });
 
   it('tv-edge-02 — StructuredExtractor est stateless entre appels', async () => {
@@ -52,11 +52,11 @@ describe('Edge cases & idempotence', () => {
       parse: (raw: unknown) => raw as { name: string; age: number },
     };
 
-    const result1 = await extractor.extract('valid', simpleContract, {});
-    const result2 = await extractor.extract('valid', contractB, {});
+    const r1 = await extractor.extract('valid', simpleContract, {});
+    const r2 = await extractor.extract('valid', contractB, {});
 
-    expect(result1).toEqual({ name: 'B', age: 2 });
-    expect(result2).toEqual({ value: 'hello' });
+    expect(r1.result).toEqual({ name: 'B', age: 2 });
+    expect(r2.result).toEqual({ value: 'hello' });
   });
 
   it('tv-edge-03 — ExtractionFatalError expose tous les champs documentés', async () => {

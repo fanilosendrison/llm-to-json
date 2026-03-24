@@ -25,6 +25,12 @@ function deriveErrorType(error: unknown): string {
 	return "unknown";
 }
 
+/** Return type of extract(): parsed result + raw LLM output for tracing. */
+export interface ExtractionOutput<T> {
+	readonly result: T;
+	readonly rawOutput: string;
+}
+
 export class StructuredExtractor {
 	private readonly llmClient: LLMClient;
 	private readonly ajv: Ajv;
@@ -43,7 +49,7 @@ export class StructuredExtractor {
 		agentResponse: string,
 		contract: ExtractionContract<T>,
 		variables: Record<string, string>,
-	): Promise<T> {
+	): Promise<ExtractionOutput<T>> {
 		const extractStart = performance.now();
 
 		// Step 0: Log extract_start — before any validation
@@ -164,7 +170,7 @@ export class StructuredExtractor {
 					timestamp: new Date().toISOString(),
 				}),
 			);
-			return result;
+			return { result, rawOutput: rawResponse };
 		} catch (error) {
 			// Logging-only catch: observe, log, re-throw unchanged
 			const durationMs = Math.round(performance.now() - extractStart);
