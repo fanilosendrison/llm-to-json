@@ -23,9 +23,10 @@ describe('Extract flow wiring & happy path', () => {
     llmClient = mockLLMClient('{"name":"Alice","age":30}');
     extractor = new StructuredExtractor(llmClient);
 
-    const result = await extractor.extract('raw input', simpleContract, {});
+    const { result, rawOutput } = await extractor.extract('raw input', simpleContract, {});
 
     expect(result).toEqual({ name: 'Alice', age: 30 });
+    expect(rawOutput).toBe('{"name":"Alice","age":30}');
   });
 
   it('tv-flow-02 — complete reçoit system interpolé, user interpolé, config correcte', async () => {
@@ -123,7 +124,7 @@ describe('Extract flow wiring & happy path', () => {
     const parseSpy = vi.fn((raw: unknown) => raw);
     const contract = { ...simpleContract, parse: parseSpy };
 
-    const result = await extractor.extract('valid', contract, {});
+    const { result } = await extractor.extract('valid', contract, {});
 
     expect(parseSpy).toHaveBeenCalledWith({ name: 'H', age: 6 });
     // Identity check: same reference from JSON.parse → parse → return
@@ -141,7 +142,7 @@ describe('Extract flow wiring & happy path', () => {
       },
     };
 
-    const result = await extractor.extract('valid', contract, {});
+    const { result } = await extractor.extract('valid', contract, {});
 
     expect(result).toEqual({ transformed: true });
   });

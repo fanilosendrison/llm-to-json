@@ -57,7 +57,7 @@ describe("Integration: extract() 10-step end-to-end flow", () => {
 			},
 		};
 
-		const result = await extractor.extract("raw LLM output", contract, {
+		const { result, rawOutput } = await extractor.extract("raw LLM output", contract, {
 			agent_name: "Worker",
 		});
 
@@ -69,6 +69,7 @@ describe("Integration: extract() 10-step end-to-end flow", () => {
 		);
 		// Verify parse() enriched the result
 		expect(result).toEqual({ name: "Alice", age: 30, source: "parsed" });
+		expect(rawOutput).toBe('{"name":"Alice","age":30}');
 		// Verify logging pairing
 		expect(consoleSpy).toHaveBeenCalledTimes(2);
 		expect(parseLogEntry(0)["event"]).toBe("extract_start");
@@ -201,8 +202,8 @@ describe("Integration: extract() 10-step end-to-end flow", () => {
 		const r1 = await ext.extract("call 1", simpleContract, {});
 		const r2 = await ext.extract("call 2", simpleContract, {});
 
-		expect(r1).toEqual({ name: "First", age: 1 });
-		expect(r2).toEqual({ name: "Second", age: 2 });
+		expect(r1.result).toEqual({ name: "First", age: 1 });
+		expect(r2.result).toEqual({ name: "Second", age: 2 });
 		expect(completeMock).toHaveBeenCalledTimes(2);
 		// 4 log entries: 2 × (extract_start + extract_end)
 		expect(consoleSpy).toHaveBeenCalledTimes(4);
@@ -218,7 +219,7 @@ describe("Integration: extract() 10-step end-to-end flow", () => {
 
 		// First call succeeds
 		const r1 = await ext.extract("call 1", simpleContract, {});
-		expect(r1).toEqual({ name: "OK", age: 1 });
+		expect(r1.result).toEqual({ name: "OK", age: 1 });
 
 		// Second call fails with INVALID_JSON
 		const error = await ext
@@ -230,6 +231,6 @@ describe("Integration: extract() 10-step end-to-end flow", () => {
 		// Third call: extractor still works (not corrupted)
 		completeMock.mockResolvedValueOnce('{"name":"Recovered","age":3}');
 		const r3 = await ext.extract("call 3", simpleContract, {});
-		expect(r3).toEqual({ name: "Recovered", age: 3 });
+		expect(r3.result).toEqual({ name: "Recovered", age: 3 });
 	});
 });
